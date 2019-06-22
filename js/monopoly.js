@@ -2,6 +2,7 @@ var Monopoly = {};
 Monopoly.allowRoll = true;
 Monopoly.moneyAtStart = 25;
 Monopoly.doubleCounter = 0;
+let extra = false; 
 
 
 // initiates the game; 
@@ -89,8 +90,8 @@ Monopoly.rollDice = function(){
         console.log("player" + players + " won the game");
     }else {
         $('.my-score').empty();
-        var result1 = Math.floor(Math.random() * 1) + 1 ;
-        var result2 = Math.floor(Math.random() * 1) + 1 ;
+        var result1 = Math.floor(Math.random() * 6) + 1 ;
+        var result2 = Math.floor(Math.random() * 6) + 1 ;
         $(".dice").find(".dice-dot").css("opacity",0);
         $(".dice#dice1").attr("data-num",result1).find(".dice-dot.num" + result1).css("opacity",1);
         $(".dice#dice2").attr("data-num",result2).find(".dice-dot.num" + result2).css("opacity",1);
@@ -102,15 +103,9 @@ Monopoly.rollDice = function(){
             $('.my-score').append(li);      
         };
         if (result1 == result2){
-           
             var player = Monopoly.getCurrentPlayer();
-           //Monopoly.setNextPlayerTurn();
-            Monopoly.handleTurn(player);
-            //Monopoly.handleAction(player,"move",result1 + result2);
-          
-            
-            
-
+            Monopoly.handleAction(player,"move",result1 + result2);
+            extra = true;
             
         }else{
             var currentPlayer = Monopoly.getCurrentPlayer();
@@ -164,7 +159,16 @@ Monopoly.setNextPlayerTurn = function(){
     var currentPlayerTurn = Monopoly.getCurrentPlayer();
     var playerId = parseInt(currentPlayerTurn.attr("id").replace("player",""));
     //currentPlayerTurn.remove();
-    var nextPlayerId = playerId + 1;
+    if(extra){
+        var nextPlayerId = playerId;
+        extra = false;
+    }else {
+        var nextPlayerId = playerId + 1;
+
+    }
+       // var nextPlayerId = playerId;
+
+     
     if (nextPlayerId > $(".player").length){
         nextPlayerId = 1;
     }
