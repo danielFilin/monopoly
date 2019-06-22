@@ -1,6 +1,6 @@
 var Monopoly = {};
 Monopoly.allowRoll = true;
-Monopoly.moneyAtStart = 10;
+Monopoly.moneyAtStart = 25;
 Monopoly.doubleCounter = 0;
 
 
@@ -13,8 +13,6 @@ Monopoly.init = function(){
         Monopoly.initPopups();
         Monopoly.start();        
     });
-
-    
 };
 
 //Show Welcome message
@@ -40,7 +38,6 @@ Monopoly.getCurrentPlayer = function(){
 // check whom a certain cell belongs
 Monopoly.getPlayersCell = function(player){
     return player.closest(".cell");
- 
 };
 
 // checks the amount of money that belongs to the active player
@@ -50,33 +47,44 @@ Monopoly.getPlayersMoney = function(player){
 
 // updates the amount of money of the active player
 Monopoly.updatePlayersMoney = function(player,amount, give){
+
     var playersMoney = parseInt(player.attr("data-money"));
     if(give){
     playersMoney += amount;
     }else {
         playersMoney -= amount;
     }
-        if (playersMoney < 4 ){
+        if (playersMoney < 5 ){
+            //console.log(playersMoney)
+            console.log(player[0].id);
             console.log(player);
             //player.remove();
             //Monopoly.initDice();
             //Monopoly.initPopups();
-            alert("you are broke!")
+            let propertyCell = Monopoly.getPlayersCell(player);
+            console.log(propertyCell)
+            propertyCell.addClass("available")
+                    .removeClass(player.attr("id"))
+                    //.removeAttr()
+                     Monopoly.setNextPlayerTurn();
+            let users = $(".content");
+            console.log(users.length)
+            //if(users.backgroundColor === "")
+
+            //alert("you are broke!")
         }else{
             player.attr("data-money",playersMoney);
             console.log(playersMoney)
             player.attr("title",player.attr("id") + ": $" + playersMoney);
             Monopoly.playSound("chaching");
         }
-      
- 
-   
 };
 
 // function that is responsible for rolling the dice, check the result and make the proper action - movement
 // that will correspond to it. 
 Monopoly.rollDice = function(){
     let players = $('.player');
+   
     if(players.length < 1){
         console.log("player" + players + " won the game");
     }else {
@@ -88,15 +96,21 @@ Monopoly.rollDice = function(){
         $(".dice#dice2").attr("data-num",result2).find(".dice-dot.num" + result2).css("opacity",1);
        
         for(let i = 0; i< players.length; i++){
+            let idi = players[i].id; 
             let li = $("<h3>");
-            li.text(`player ${i} has ${players[i].dataset.money} dollars`);
-            $('.my-score').append(li);
-            console.log(li);
+            li.text(`${idi} has ${players[i].dataset.money} dollars`);
+            $('.my-score').append(li);      
         };
         if (result1 == result2){
-     
-             var player = Monopoly.getCurrentPlayer();
-            Monopoly.handleAction(player,"move",result1 + result2);
+           
+            var player = Monopoly.getCurrentPlayer();
+           //Monopoly.setNextPlayerTurn();
+            Monopoly.handleTurn(player);
+            //Monopoly.handleAction(player,"move",result1 + result2);
+          
+            
+            
+
             
         }else{
             var currentPlayer = Monopoly.getCurrentPlayer();
@@ -149,7 +163,7 @@ Monopoly.handleTurn = function(){
 Monopoly.setNextPlayerTurn = function(){
     var currentPlayerTurn = Monopoly.getCurrentPlayer();
     var playerId = parseInt(currentPlayerTurn.attr("id").replace("player",""));
-    currentPlayerTurn.remove();
+    //currentPlayerTurn.remove();
     var nextPlayerId = playerId + 1;
     if (nextPlayerId > $(".player").length){
         nextPlayerId = 1;
@@ -307,7 +321,6 @@ Monopoly.handleBuy = function(player,propertyCell,propertyCost){
     if (playersMoney < propertyCost){
         Monopoly.showErrorMsg();
         Monopoly.playSound("Computer Error Alert-SoundBible.com-783113881");
-
     }else{
         Monopoly.updatePlayersMoney(player,propertyCost);
         var rent = Monopoly.calculateProperyRent(propertyCost);
@@ -358,7 +371,7 @@ Monopoly.createPlayers = function(numOfPlayers){
 
 Monopoly.getNextCell = function(cell){
     var currentCellId = parseInt(cell.attr("id").replace("cell",""));
-    console.log(currentCellId)
+    //console.log(currentCellId)
     var nextCellId = currentCellId + 1
     if (nextCellId > 40){
         console.log("YAY")
