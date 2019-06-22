@@ -90,3 +90,7 @@ body{
     background-repeat:no-repeat;
     background-size: 40px;
 }
+
+.broke{
+    display: none; 
+}
