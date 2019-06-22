@@ -48,14 +48,6 @@ Monopoly.playerIsBroke = (player) => {
          console.log("player" + players.id + " won the game");
      }
 
-    // var popup = Monopoly.getPopup("broke");
-    // //player.addClass("sad-face");
-    // popup.find("button").unbind("click").bind("click",function(){
- 
-    // });
-    // Monopoly.showPopup("broke");
-
-   
 };
 
 
